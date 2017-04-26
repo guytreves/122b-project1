@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{hyperref}
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+\newtheorem*{solution}{Solution}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{Dept. of Computer Science, University of California, Davis\\ECS122b \hspace{.5in} Instructor: Rob Gysel \hspace{.5in} 4/19/16} % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Programming Assignment \#1\footnote{Last updated \today}\\Due date: 5/12/17 11:59pm \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{} % Put your name here
+
+\date{}
+
+\begin{document}
+\maketitle % Print the title
+\vspace{-3cm}
+
+Programs are to be submitted to Gradescope by the due date.
+You may work in groups of up to 5 people.
+Only one submission needs to be submitted to Gradescope, but your entire group should be added to the submission.
+To check that you have correctly submitted and added your group members, your group members who have not submitted should be able to log in to Gradescope and see what their partner has submitted.
+Programs submitted up to 24 hours late will still be accepted but incur a 10\% grade penalty (submit under ProjectPart*\_FirstLateSubmission).
+Programs submitted between 24-48 hours late will still be accepted but incur a 25\% grade penalty (submit under ProjectPart*\_SecondLateSubmission).
+\textbf{Your last submission will be the score entered as your grade.
+If you have a previous submission with a higher grade than your last submission, you should re-submit that submission to ensure you get as many points as possible.}
+
+\subsection*{Overview}
+In this project, you will:
+\begin{enumerate}
+	\item Write basic unit tests.
+	\item Add basic building instructions to CMakeLists.txt for CMake.
+	\item Write sanity checks.
+	\item Implement two exact matching algorithms: Z-algorithm based matching and Boyer-Moore.
+\end{enumerate}
+
+First, be sure your development environment is set up according to the instructions given in Discussion the first week.
+If you have not done this yet, notes are at \url{http://tinyurl.com/ecs122b-env-setup}.
+Carefully follow part 3, "Setting up developing environment", which contains a step-by-step list of how to get your environment up and running.
+
+Second, find the skeleton code for the project under Canvas$\to$Files$\to$ProgrammingProject.
+You do not need to create any files from scratch for this project.
+Your programming will consist of writing tests and implementing the body of pre-defined functions.
+\textbf{Warning: to match the notation of the text, pattern strings, text strings, etc. are defined to start with index 1 (1-indexed).
+To simplify this, use the following convention: to represent a string "mystring", use \texttt{std::string S = " mystring"} (note the leading space).
+Strings representing alphabets (e.g. $\Sigma$) are 0-indexed as normal.}
+
+Throughout this project, when you compile, do the following steps in your project's root directory\footnote{The root directory will have all of your .cpp, .h files etc.}.
+In the following commands, I assume you are starting in the root directory.
+\begin{enumerate}
+	\item Create a directory called \texttt{build} using \texttt{mkdir}, or change directory to \texttt{build} and delete its contents with \texttt{rm -r *}.
+	\item Run CMake in \texttt{build} with \texttt{CMake ..}
+	\item Run Make in \texttt{build} with \texttt{make} (any unit tests you have defined will execute during this stage.)
+\end{enumerate}
+
+\subsection*{References}
+The following are helpful references for this project.
+\begin{description}
+	\item[C++ Standard Library] \url{http://www.cplusplus.com/reference/} (has tutorials) and \url{http://en.cppreference.com/w/} (terse)
+	\item[Google Test Documentation] \url{http://cheezyworld.com/wp-content/uploads/2010/12/PlainGoogleQuickTestReferenceGuide1.pdf}, especially page 3, which defines \texttt{EXPECT\_*} and \texttt{ASSERT\_*} macros that you must use for all of your tests.
+	\item[CMake Documentation] You should not need to deep-dive into CMake. Instead, you should be able to copy and paste CMake code and make the appropriate changes where necessary (e.g. change which source files are used, target names, etc.). However, if you feel that you need a reference, refer to \url{https://cmake.org/documentation/}.
+\end{description}
+
+\subsection*{Part1: Z-algorithm Exact Matching}
+\begin{description}
+	\item[Learning objectives:] Understand and implement Z-algorithm exact matching as described in the text. Learn how to write unit tests and how unit tests inform your development process while you code. Learn how to test your program in a more thorough manner by writing a sanity check.
+	\item[Gradescope assignment to submit to:] ProjectPart1
+	\item[Files to modify:] \texttt{Zalgorithm.cpp}, \texttt{ZalgorithmTests.cpp}, \texttt{ZalgorithmSanityCheck.cpp}
+	\item[Instructions:] Complete the following steps, \textit{in this order}.
+		\begin{enumerate}
+			\item Write all of the unit tests in \texttt{ZalgorithmTests.cpp}. All of your tests should pass at this stage because they test code that has already been implemented. You must use either \texttt{EXPECT\_*} or \texttt{ASSERT\_*} for your tests.
+			\item Write the \texttt{ZalgorithmBasedMatching} function in \texttt{Zalgorithm.cpp} and check its results manually using small examples (keep your text at most 10 characters and pattern at most 3 characters).
+			\item Write the sanity check in \texttt{ZalgorithmSanityCheck.cpp}. Once complete, build it, then run \texttt{ZalgorithmSanityCheck} in the \texttt{build} directory. If you see errors, you may need to debug \texttt{ZalgorithmBasedMatching} from the previous step, or you may need to debug your sanity check in \texttt{ZalgorithmSanityCheck.cpp}. You may want to look at \texttt{TwoAlgorithmVerificationSanityCheck.cpp} as an example.
+			\item Submit to Gradescope under Assignments$\to$ProjectPart1.
+		\end{enumerate}
+\end{description}
+
+\subsection*{Part2: Boyer-Moore Preprocessing}
+\begin{description}
+	\item[Learning objectives:] Understand and implement Boyer-Moore preprocessing rules as described in the text. Learn how to build libraries, build executables, and link libraries using CMake.
+	\item[Gradescope assignment to submit to:] ProjectPart2
+	\item[Files to modify:] \texttt{BoyerMoorePreprocessing.cpp}, \texttt{BoyerMoorePreprocessingTests.cpp}, \texttt{CMakeLists.txt}
+	\item[Instructions:] Complete the following steps, \textit{in this order}.
+		\begin{enumerate}
+			\item Add unit tests to your project by modifying \texttt{CMakeLists.txt}. Under the line "\texttt{\#\#\#\#\#\#\#\#\#\# TODO: Add unit tests for BoyerMoorePreprocessing (call it BoyerMoorePreprocessingTests) here}", add unit tests for \texttt{BoyerMoorePreprocessing} by following the example for \texttt{ZalgorithmTests} defined directly above it.
+			\item Implement all \texttt{CalculateRTest}s in \texttt{BoyerMoorePreprocessingTests.cpp} and \texttt{CalculateR} in \texttt{BoyerMoorePreprocessing.cpp}. Be sure to check the contents of \texttt{R} and its size. Use \texttt{ASSERT} to check the size here in order to prevent a segmentation fault when checking the contents of \texttt{R}. All three of these tests should fail (red) at this stage because they test unwritten code.
+			\item Implement the \texttt{CalculateR} function in \texttt{BoyerMoorePreprocessing.cpp}. Once implemented, all three tests from the previous step should succeed (green).
+			\item Repeat steps 2-3 for \texttt{CalculateN}. The test defined should exactly match the textbook example in order to guide your programming.
+			\item Repeat steps 2-3 for \texttt{CalculateCapitalLprime}.
+			\item Implement \texttt{CalculateLowercaseLprimeTest} in \texttt{BoyerMoorePreprocessingTests.cpp}. The function \texttt{CalculateLowercaseLprime} is already implemented, so your test should pass. Once your test passes, check that it is valid by commenting out part of \texttt{CalculateLowercaseLprime} (or its entirety) and running the test to make sure it fails.
+			\item Submit to Gradescope under Assignments$\to$ProjectPart2.
+		\end{enumerate}
+\end{description}
+
+\subsection*{Part3: Boyer-Moore Exact Matching}
+\begin{description}
+	\item[Learning objectives:] Understand and implement the remainder of the Boyer-Moore algorithm as described in the text (this is partially written for you). Learn how to sanity check your results using two algorithms to verify results.
+	\item[Gradescope assignment to submit to:] ProjectPart3
+	\item[Files to modify:] \texttt{BoyerMoore.cpp}, \texttt{BoyerMooreSanityCheck.cpp}, \texttt{TwoAlgorithmVerificationSanityCheck.cpp}, \texttt{CMakeLists.txt}
+	\item[Instructions:] Complete the following steps, \textit{in this order}.
+		\begin{enumerate}
+			\item Add unit tests and sanity checks to your project by modifying \texttt{CMakeLists.txt}. You should copy, paste, and slightly modify the current code in \texttt{CMakeLists.txt} to achieve this. See the \texttt{TODO}s in \texttt{CMakeLists.txt} for details. Make sure every \texttt{TODO} in \texttt{CMakeLists.txt} has been addressed.
+			\item Implement the rest of \texttt{BoyerMoore.cpp}.
+			\item Write the sanity check in \texttt{BoyerMooreSanityCheck.cpp}. Once complete, build it, then run \texttt{BoyerMooreSanityCheck.cpp} in the \texttt{build} directory. If you see errors, you may need to debug \texttt{BoyerMoore} from the previous step, or you may need to debug your sanity check in \texttt{BoyerMooreSanityCheck.cpp}.
+			\item Repeat step 3 for \texttt{TwoAlgorithmVerificationSanityCheck.cpp}.
+			\item Submit to Gradescope under Assignments$\to$ProjectPart3.
+		\end{enumerate}
+\end{description}
+
+
+
+\end{document}
